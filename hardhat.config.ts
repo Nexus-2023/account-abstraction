@@ -59,7 +59,10 @@ const config: HardhatUserConfig = {
     // github action starts localgeth service, for gas calculations
     localgeth: { url: 'http://localgeth:8545' },
     goerli: getNetwork('goerli'),
-    sepolia: getNetwork('sepolia'),
+    sepolia: {
+      url: process.env.SEPOLIA_URL,
+      accounts: [process.env.PRIVATE_KEY??""]
+    },
     proxy: getNetwork1('http://localhost:8545')
   },
   mocha: {
@@ -67,7 +70,25 @@ const config: HardhatUserConfig = {
   },
   // @ts-ignore
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY
+    apiKey: process.env.ETHERSCAN_API,
+    customChains:[
+      {
+        network: "holesky",
+        chainId: 17000,
+        urls: {
+            apiURL: "https://api-holesky.etherscan.io/api",
+            browserURL: "https://holesky.etherscan.io"
+        }
+      },
+      {
+        network: "berachain_bartio",
+        chainId: 80084,
+        urls: {
+          apiURL: "https://api.routescan.io/v2/network/testnet/evm/80084/etherscan",
+          browserURL: "https://bartio.beratrail.io"
+        }
+      }
+    ]
   }
 
 }
